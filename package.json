@@ -1,0 +1,40 @@
+{
+  "name": "blurmage",
+  "version": "1.0.0",
+  "description": "Generate lazy image tags",
+  "homepage": "https://github.com/lastguest/blurmage#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lastguest/blurmage.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lastguest/blurmage/issues"
+  },
+  "keywords": [
+    "image",
+    "lazy",
+    "blur",
+    "lazyload"
+  ],
+  "author": "Stefano Azzolini <stefano.azzolini@caffeina.com>",
+  "contributors": [
+    {
+      "name": "Stefano Azzolini",
+      "email": "stefano.azzolini@caffeina.com"
+    }
+  ],
+  "main": "index.js",
+  "bin": {
+    "blurmage": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "download": "^5.0.0",
+    "lwip": "0.0.9",
+    "minimist": "^1.2.0",
+    "os-tmpdir": "^1.0.1"
+  }
+}
