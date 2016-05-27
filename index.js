@@ -3,14 +3,18 @@
 
 var Jimp 			= require('jimp'),
 		argv 			= require('minimist')(process.argv.slice(2)),
-		image_url = argv._[0] || (console.error("You must specify an image URL/Path") && process.exit(1)),
 		options   = {
 			max_pixels: 50,
-			quality: 75,
-			animation: '.45s'
+			quality: 		75,
+			animation:  '.45s'
 		},
-		template  = '<!--IMG--><div class="-blurmage" style="transform:translatez(0);background-image:url({THUMB});background-size:cover;background-position:center center;transition:background-image {ANIMATION_TIME} ease-in-out;width:{WIDTH}px;height:{HEIGHT}px;"><img width="{WIDTH}" height="{HEIGHT}" src="{IMAGE}" style="visibility:hidden" onload="this.parentNode.style[\'background-image\']=\'url(\'+this.src+\')\'"></div><!--/IMG-->'
+		template  = '<!--IMG--><div class="-blurmage" style="transform:translatez(0);background-image:url({THUMB});background-size:cover;background-position:center center;transition:background-image {ANIMATION_TIME} ease-in-out;width:{WIDTH}px;height:{HEIGHT}px;"><img width="{WIDTH}" height="{HEIGHT}" src="{IMAGE}" style="visibility:hidden" onload="this.parentNode.style[\'background-image\']=\'url(\'+this.src+\')\'"></div><!--/IMG-->',
+		image_url = argv._[0] || ''
 
+if (!image_url) {
+	console.error("You must specify an image URL/Path")
+	process.exit(1)
+}
 
 Jimp.read(image_url).then(function(image){
   	var WIDTH  = image.bitmap.width,
