@@ -1,0 +1,5 @@
+.gitignore
+node_modules
+blurmage.gif
+.DS_Store
+README.md
