@@ -33,8 +33,7 @@
   },
   "dependencies": {
     "download": "^5.0.0",
-    "lwip": "0.0.9",
-    "minimist": "^1.2.0",
-    "os-tmpdir": "^1.0.1"
+    "jimp": "^0.2.24",
+    "minimist": "^1.2.0"
   }
 }

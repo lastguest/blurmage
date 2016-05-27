@@ -1,34 +1,34 @@
 #!/usr/bin/env node
 "use strict";
 
-var lwip 			= require('lwip'),
+var Jimp 			= require('jimp'),
 		argv 			= require('minimist')(process.argv.slice(2)),
-		image_url = argv._[0] || false,
-		download  = require('got');
+		image_url = argv._[0] || (console.error("You must specify an image URL/Path") && process.exit(1)),
+		options   = {
+			max_pixels: 50,
+			quality: 75,
+			animation: '.45s'
+		},
+		template  = '<!--IMG--><div class="-blurmage" style="transform:translatez(0);background-image:url({THUMB});background-size:cover;background-position:center center;transition:background-image {ANIMATION_TIME} ease-in-out;width:{WIDTH}px;height:{HEIGHT}px;"><img width="{WIDTH}" height="{HEIGHT}" src="{IMAGE}" style="visibility:hidden" onload="this.parentNode.style[\'background-image\']=\'url(\'+this.src+\')\'"></div><!--/IMG-->'
 
-if (!image_url){
-	console.error("You must specify an image URL/Path")
-	process.exit(1)
-}
 
-download(image_url,{encoding:null}).then(function(response){
-	var type = response.headers['content-type'],WIDTH,HEIGHT
-  lwip.open(response.body, type.replace('image/',''), function(err, image){
-  	WIDTH = image.width()
-  	HEIGHT = image.height()
-	  image.contain(20, 20, {r:0,g:0,b:0,a:0}, 'lanczos', function(err, image){
-	    image.toBuffer('jpg', function(err, buffer){
-	    	var datauri   = "data:" + type + ";base64," + buffer.toString('base64')
-	    	var template  = '<div style="background-image:url({THUMB});background-size:cover;transition:background-image .5s ease-in-out;width:{WIDTH}px;height:{HEIGHT}px;"><img width="{WIDTH}" height="{HEIGHT}" src="{IMAGE}" style="opacity:0" onload="this.parentNode.style[\'background-image\']=\'url(\'+this.src+\')\'"></div>'
+Jimp.read(image_url).then(function(image){
+  	var WIDTH  = image.bitmap.width,
+  	    HEIGHT = image.bitmap.height
 
-	    	var output = template
-	    	              .replace(/{THUMB}/g, datauri)
-	    	              .replace(/{IMAGE}/g, image_url)
-	    	              .replace(/{WIDTH}/g, WIDTH)
-	    	              .replace(/{HEIGHT}/g,HEIGHT)
-
+  	image
+  		.scaleToFit(options.max_pixels, options.max_pixels)
+  		.blur(1)
+  		.quality(options.quality)
+  		.getBuffer( Jimp.MIME_JPEG, function(err, buffer){
+				var output = template
+	    	              .replace(/{ANIMATION_TIME}/g,  options.animation)
+	    	              .replace(/{THUMB}/g,   "data:image/jpeg;base64," + buffer.toString('base64').replace(/=+$/,''))
+	    	              .replace(/{IMAGE}/g,   image_url)
+	    	              .replace(/{WIDTH}/g,   WIDTH)
+	    	              .replace(/{HEIGHT}/g,  HEIGHT)
 	    	console.log(output)
-	    })
-	  })
-	})
+  		})
+}).catch(function (err) {
+    console.error(err);
 })
